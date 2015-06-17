@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Login --&#62; Login i Sortida</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="Guia de Referencia: Administrador"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Scripts --> Script Calendari"
+HREF="c113.html"><LINK
+REL="NEXT"
+TITLE="Contacta --> Formulari de contacta pÃ gina web"
+HREF="c121.html"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Guia de Referencia: Administrador</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c113.html"
+ACCESSKEY="P"
+>Anterior</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c121.html"
+ACCESSKEY="N"
+>Següent</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="AEN117"
+></A
+>Capítol 19. Login --&#62; Login i Sortida</H1
+><P
+>AquÃ­ tenim la funciÃ³ per loggeijarmos al sistema d'administraciÃ³ i per deslogeijarmos comprovan el teu correu electronic i contrasenya </P
+><PRE
+CLASS="programlisting"
+>&#60;?php
+ public function iniciar_sessio() {       //processar formulari
+	      if ($this-&#62;input-&#62;post()) {
+	         $email = $this-&#62;input-&#62;post('email');
+	         $contrasenya = md5($this-&#62;input-&#62;post('contrasenya'));
+	         $this-&#62;load-&#62;model('client_model');
+	         $usuario = $this-&#62;client_model-&#62;usuario_por_nombre_contrasena($email, $contrasenya);
+	         
+	         if ($usuario) {	         	     
+	            $usuari_data = array(
+	               'ID_USUARI' =&#62; $usuario-&#62;ID_USUARI,
+	               'EMAIL' =&#62; $email-&#62;EMAIL,
+	               'NOM' =&#62; $usuario-&#62;NOM,
+	               'COGNOMS' =&#62; $usuario-&#62;COGNOMS,
+	               'FOTO' =&#62; $usuario-&#62;FOTO,
+	               'DATA_NAIXEMENT' =&#62; $usuario-&#62;DATA_NAIXEMENT,
+	               'ROL' =&#62; $usuario-&#62;ROL,
+	               'ESTAT' =&#62; $usuario-&#62;ESTAT,
+	               'CATEGORIA' =&#62; $usuario-&#62;CATEGORIA,
+	               'logueado' =&#62; TRUE
+	            );	            
+	            $this-&#62;session-&#62;set_userdata($usuari_data);
+	            redirect('client/index');
+	         } else {
+	            redirect('client/login');
+	         }
+	      } else {
+	         $this-&#62;login();
+	      }
+	   }
+	  
+	   public function cerrar_sesion() {
+	      $usuario_data = array(
+	         'logueado' =&#62; FALSE
+	      );
+	      $this-&#62;session-&#62;set_userdata($usuario_data);
+	      $this-&#62;session-&#62;sess_destroy();
+	      redirect('client/login');
+	   }
+    </PRE
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c113.html"
+ACCESSKEY="P"
+>Anterior</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Inici</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c121.html"
+ACCESSKEY="N"
+>Següent</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Scripts --&#62; Script Calendari</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Contacta --&#62; Formulari de contacta pÃ gina web</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

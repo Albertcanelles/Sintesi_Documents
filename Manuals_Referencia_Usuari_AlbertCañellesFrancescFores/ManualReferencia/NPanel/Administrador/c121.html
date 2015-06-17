@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Contacta --&#62; Formulari de contacta pÃ gina web</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="Guia de Referencia: Administrador"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Login --> Login i Sortida"
+HREF="c117.html"><LINK
+REL="NEXT"
+TITLE="Tauler d'administraciÃ³ --> Gets"
+HREF="c125.html"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Guia de Referencia: Administrador</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c117.html"
+ACCESSKEY="P"
+>Anterior</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c125.html"
+ACCESSKEY="N"
+>Següent</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="AEN121"
+></A
+>Capítol 20. Contacta --&#62; Formulari de contacta pÃ gina web</H1
+><P
+>AquÃ­ tenim el forumali de contacta que envia les peticions del usuaris a l'administrador del compte de correu  </P
+><PRE
+CLASS="programlisting"
+>&#60;?php
+		 public function enviar(){
+	   			$this-&#62;load-&#62;library('email');
+		        $this-&#62;form_validation-&#62;set_rules('nom', 'nom', 'required');
+		        $this-&#62;form_validation-&#62;set_rules('email', 'email', 'required');
+		        $this-&#62;form_validation-&#62;set_rules('asumpte', 'asumpte', 'required');
+        	   	$this-&#62;form_validation-&#62;set_rules('missatge','missatge','required');
+		        if ($this-&#62;form_validation-&#62;run() == FALSE){		        	
+	            	$this-&#62;load-&#62;view('client/contacta');
+		        }
+		        else
+		        { 	
+		        		$configGmail = array(
+							'protocol' =&#62; 'smtp',
+							'smtp_host' =&#62; 'ssl://smtp.gmail.com',
+							'smtp_port' =&#62; 465,
+							'smtp_user' =&#62; $this-&#62;input-&#62;post('email'), //email al del emissor
+							'smtp_pass' =&#62; $this-&#62;input-&#62;post('contrasenya'),
+							'mailtype' =&#62; 'html',
+							'charset' =&#62; 'utf-8',
+							'newline' =&#62; "\r\n"
+						); 
+		        	$this-&#62;email-&#62;initialize($configGmail);
+					$this-&#62;email-&#62;from($this-&#62;input-&#62;post('email'),$this-&#62;input-&#62;post('nom'));
+					$this-&#62;email-&#62;to('ffores93@gmail.com', 'Admin'); //email de club de natacio
+					$this-&#62;email-&#62;subject($this-&#62;input-&#62;post('asumpte'));
+					$this-&#62;email-&#62;message($this-&#62;input-&#62;post('missatge'));
+					
+					if($this-&#62;email-&#62;send()){
+		            	$this-&#62;session-&#62;set_flashdata('envio', '&#60;button type="button" class="btn btn-success btn-sm"&#62;
+					                           &#60;p&#62;Email enviat correctamente&#60;/p&#62; &#60;span class="glyphicon glyphicon-ok"&#62;&#60;/span&#62; 
+					                        &#60;/button&#62;');
+		            	
+			        }else{
+			            $this-&#62;session-&#62;set_flashdata('envio', '&#60;button type="button" class="btn btn-danger btn-sm"&#62;
+					                            &#60;span class="glyphicon glyphicon-remove"&#62;&#60;/span&#62; 
+					                        &#60;/button&#62;');
+			        }	         
+			        
+					echo $this-&#62;email-&#62;print_debugger();
+		        	redirect("client/contacta");
+				}			
+	      
+	   }   
+
+    </PRE
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c117.html"
+ACCESSKEY="P"
+>Anterior</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Inici</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c125.html"
+ACCESSKEY="N"
+>Següent</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Login --&#62; Login i Sortida</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Tauler d'administraciÃ³ --&#62; Gets</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

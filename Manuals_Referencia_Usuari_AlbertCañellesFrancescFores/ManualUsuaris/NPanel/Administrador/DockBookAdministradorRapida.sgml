@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<book lang="ca">
+  <bookinfo>
+    <date>4 de Juny de 2015</date>
+    <title>Guia de l'usuari: Administrador</title>
+    <author>
+  <firstname>Albert</firstname>
+      <surname>Cañelles Panisello</surname>
+      <affiliation>
+        <orgname>IES EBRE</orgname>
+      </affiliation>
+    </author>
+    <author>
+  <firstname>Francesc</firstname>
+      <surname>Fores Campos</surname>
+      <affiliation>
+        <orgname>IES EBRE</orgname>
+      </affiliation>
+    </author>
+  </bookinfo>
+
+  <chapter> 
+    <title>Tauler Administratiu --> Inici</title>
+    <para> En aquesta vista trobem contingut que tenim insertat a la nostra base de dades</para>
+    <para> Tenim el numero de entrades a Actualitat</para>
+    <para> Tenim el numero de competicions del mes</para>
+    <para> El numero d'usuaris registrats</para>
+    <para> El numero d'usuaris per registrà</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="imatges/inici.png"/>
+      </imageobject>
+      <textobject>
+        <phrase>Figura 1.Vista Pàgina d'Inici</phrase>
+      </textobject>
+    </mediaobject>
+
+  </chapter> 
+  
+  <chapter> 
+    <title>Tauler Administratiu --> CRUD Actualitat </title>
+    <para> En aquest apart del menú podras insertar actualitat per mantenir actualitzat el teu blog</para>
+    <para> Tenim 3 Camps 2 de text per Insertar el titol i un altre per insertar el comentari despres tenim un altre camp per pujar una foto</para>
+    <para>Despres tenim la taula amb varies opcions que són les següents</para>
+    <para> - Refrescar la taula (Per si tenim dades noves)</para>
+    <para> - Amagar tots els noms de les taules</para>
+    <para> - Amagar solament alguna columna</para>
+    <para> - Buscar registres</para>
+    <para> - Paginador</para>
+    <para> - Mostrar 10, 25, 50 o 100 registres</para>
+    <para> Despres Pases al interior de la taula a la columna Accions on estan ubicades 2 opcions importants Modificar i Eliminar</para>
+    <para> - Botonet Tarronja = Modifcar</para>
+    <para> - Al fer click ens portarà a una altra pàgina que solament mostrara les dades d'aquella noticia per poder-les modificar i guardar altre cop</para>
+    <para> - Botonet Roig = Eliminar</para>
+    <para> - Al fer click al boto d'eliminar ens mostrara un avis conforme si volem eliminar aquella noticia o no</para>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="imatges/actualitat.png"/>
+      </imageobject>
+      <textobject>
+        <phrase>Figura 2.Vista Pàgina Actualitat</phrase>
+      </textobject>
+    </mediaobject>
+
+  </chapter> 
+
+<chapter>
+    <title>Tauler Administratiu --> CRUD Calendari</title>
+    <para> Per crear una competicio tenim de plenar totes les dades que tenim ens els següent camps 2 Camps de text que serien el nom de la competició i el lloc</para>
+    <para> Despres tenim Data i Hora Inici i Data i Hora Fi aquests 2 camps son Datepickers que significa aixó. Quan seleccionarem aquests camps sortira un selector amb els dies de l'any i hores</para>
+    <para> Per ultim tenim els selectors per seleccionar la categoria i l'estat en el qual competiran</para>
+   <para>Despres tenim la taula amb varies opcions que són les següents</para>
+    <para> - Refrescar la taula (Per si tenim dades noves)</para>
+    <para> - Amagar tots els noms de les taules</para>
+    <para> - Amagar solament alguna columna</para>
+    <para> - Buscar registres</para>
+    <para> - Paginador</para>
+    <para> - Mostrar 10, 25, 50 o 100 registres</para>
+    <para> Despres Pases al interior de la taula a la columna Accions on estan ubicades 2 opcions importants Modificar i Eliminar</para>
+    <para> - Botonet Tarronja = Modifcar</para>
+    <para> - Al fer click ens portarà a una altra pàgina que solament mostrara les dades d'aquella competicio per poder-les modificar i guardar altre cop</para>
+    <para> - Botonet Roig = Eliminar</para>
+    <para> - Al fer click al boto d'eliminar ens mostrara un avis conforme si volem eliminar aquella competicio o no</para>
+    <para> - Per ultim tindrem un boto verd per insertar els resultats un cop estiguen disponibles mitjançant un petit formulari</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="imatges/capturacalendari.png"/>
+      </imageobject>
+      <textobject>
+        <phrase>Figura 3.Vista Pàgina Calendari</phrase>
+      </textobject>
+    </mediaobject>
+
+  </chapter> 
+
+ 
+ <chapter> 
+    <title>Tauler Administratiu --> CRUD Documents</title>
+    <para> En aquest apartat podrem pujar documents mitjançant aquest camp es important saber que el nom del document sera el que es mostrara  </para>
+    <para>Despres tenim la taula amb varies opcions que són les següents</para>
+    <para> - Refrescar la taula (Per si tenim dades noves)</para>
+    <para> - Amagar tots els noms de les taules</para>
+    <para> - Amagar solament alguna columna</para>
+    <para> - Buscar registres</para>
+    <para> - Paginador</para>
+    <para> - Mostrar 10, 25, 50 o 100 registres</para>
+    <para> Despres Pases al interior de la taula a la columna Accions on esta ubucada l'opcio d'eliminar</para>
+    <para> - Botonet Roig = Eliminar</para>
+    <para> - Al fer click al boto d'eliminar ens mostrara un avis conforme si volem eliminar aquell document o no</para>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="imatges/capturadocuments.png"/>
+      </imageobject>
+      <textobject>
+        <phrase>Figura 4.Vista Pàgina Documents</phrase>
+      </textobject>
+    </mediaobject>
+
+  </chapter> 
+ 
+
+ 
+
+ <chapter> 
+    <title>Tauler Administratiu --> CRUD Galeria</title>
+    <para> Per crear una galeria tenim un camp de text per introduir el titol de la galeria </para>
+    <para> Hi despres tenim un altre per pujar multiples fotos</para>
+    <para>Despres tenim la taula amb varies opcions que són les següents</para>
+    <para> - Refrescar la taula (Per si tenim dades noves)</para>
+    <para> - Amagar tots els noms de les taules</para>
+    <para> - Amagar solament alguna columna</para>
+    <para> - Buscar registres</para>
+    <para> - Paginador</para>
+    <para> - Mostrar 10, 25, 50 o 100 registres</para>
+    <para> Despres Pases al interior de la taula a la columna Accions on esta ubucada l'opcio d'eliminar</para>
+    <para> - Botonet Roig = Eliminar</para>
+    <para> - Al fer click al boto d'eliminar ens mostrara un avis conforme si volem eliminar aquella galeria o no</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="imatges/capturagaleria.png"/>
+      </imageobject>
+      <textobject>
+        <phrase>Figura 5.Vista Pàgina Galeria</phrase>
+      </textobject>
+    </mediaobject>
+
+  </chapter>   
+
+
+   <chapter> 
+    <title>Tauler Administratiu --> CRUD Usuaris</title>
+    <para> En aquest tauler podrem registrar nosaltres mateixos usuaris pero tambe tindrem la opció per validar els que es registraran per la part dels usuaris amb la 2 taula</para>
+    <para> Pot registrar usuaris directament des de el administrador i aixi donar-los un rol diferent de nedador </para>
+    <para> Si l'usuari es registra mitjançant el formulari i despres s'ha de validar es registrara com a nedador</para>
+    <para> Despres simplement tenim de plenar tots els camps la categoria es calculara automaticament</para>
+    <para>Despres tenim la taula amb varies opcions que són les següents</para>
+    <para> - Refrescar la taula (Per si tenim dades noves)</para>
+    <para> - Amagar tots els noms de les taules</para>
+    <para> - Amagar solament alguna columna</para>
+    <para> - Buscar registres</para>
+    <para> - Paginador</para>
+    <para> - Mostrar 10, 25, 50 o 100 registres</para>
+    <para> Despres Pases al interior de la taula a la columna Accions on esta ubucada l'opcio d'eliminar i modificar</para>
+	<para> - Botonet Tarronja = Modifcar</para>
+    <para> - Al fer click ens portarà a una altra pàgina que solament mostrara les dades d'aquell usuari per poder modificar i guardar altre cop</para>
+    <para> - Botonet Roig = Eliminar</para>
+    <para> - Al fer click al boto d'eliminar ens mostrara un avis conforme si volem eliminar aquella galeria o no</para>
+    <para> Despres tenim la ultima taula per validar els usuaris amb 2 Accions Acceptar i Rechasar</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="imatges/capturausuari.png"/>
+      </imageobject>
+      <textobject>
+        <phrase>Figura 6.Vista Pàgina Creació d'usuaris</phrase>
+      </textobject>
+    </mediaobject>
+     <mediaobject>
+      <imageobject>
+        <imagedata fileref="imatges/capturausuaris2.png"/>
+      </imageobject>
+      <textobject>
+        <phrase>Figura 7.Vista Pàgina Modificar, Eliminar i Validar Usuaris</phrase>
+      </textobject>
+    </mediaobject>
+
+  </chapter> 
+
+</book>

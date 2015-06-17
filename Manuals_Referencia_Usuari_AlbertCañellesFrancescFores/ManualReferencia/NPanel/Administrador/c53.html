@@ -1,0 +1,163 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Tauler Administratiu --&#62; CRUD Calendari (Delete)</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="Guia de Referencia: Administrador"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Tauler Administratiu --> CRUD Calendari (Inserts)"
+HREF="c47.html"><LINK
+REL="NEXT"
+TITLE="Tauler Administratiu --> CRUD Calendari (Update)"
+HREF="c59.html"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Guia de Referencia: Administrador</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c47.html"
+ACCESSKEY="P"
+>Anterior</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c59.html"
+ACCESSKEY="N"
+>Següent</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="AEN53"
+></A
+>Capítol 7. Tauler Administratiu --&#62; CRUD Calendari (Delete)</H1
+><P
+> AquÃ­ tenim la funciÃ³ del controlador per eliminar competicions reben la ID de la vista i pasan-la al model</P
+><PRE
+CLASS="programlisting"
+>&#60;?php
+
+		function eliminar_calendari() {
+	    		$this-&#62;load-&#62;model('actualitat_model');		
+				 $id = $this-&#62;uri-&#62;segment(3);
+				 $this-&#62;actualitat_model-&#62;eliminar_calendari($id);
+				 redirect('admin/calendari');	
+	}
+
+
+    </PRE
+><P
+> Aquest es el actualitat_model i la funcio segÃ¼ent fa una select a la BD per eliminar les dades </P
+><PRE
+CLASS="programlisting"
+>&#60;?php
+
+   public  function eliminar_calendari($id){
+      $this-&#62;db-&#62;where('ID_COMPETICIO',$id);
+      return $this-&#62;db-&#62;delete('DETALL_CALENDARI');
+    }
+
+    </PRE
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c47.html"
+ACCESSKEY="P"
+>Anterior</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Inici</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c59.html"
+ACCESSKEY="N"
+>Següent</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Tauler Administratiu --&#62; CRUD Calendari (Inserts)</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Tauler Administratiu --&#62; CRUD Calendari (Update)</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

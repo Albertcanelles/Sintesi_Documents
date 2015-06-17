@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Tauler Administratiu --&#62; CRUD Calendari (Inserts)</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="Guia de Referencia: Administrador"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Tauler Administratiu --> CRUD Actualitat (Delete) "
+HREF="c41.html"><LINK
+REL="NEXT"
+TITLE="Tauler Administratiu --> CRUD Calendari (Delete)"
+HREF="c53.html"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Guia de Referencia: Administrador</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c41.html"
+ACCESSKEY="P"
+>Anterior</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c53.html"
+ACCESSKEY="N"
+>Següent</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="AEN47"
+></A
+>Capítol 6. Tauler Administratiu --&#62; CRUD Calendari (Inserts)</H1
+><P
+> Aqui tenim la funciÃ³ per insertar una competicio primer que tot fem una comprovaciÃ³ als camps i si son correctes procedim a pujar-los mes tard quan la competicio ja esta acabada podem pujar el pdf amb els resultats</P
+><PRE
+CLASS="programlisting"
+>&#60;?php
+
+  function inserta_calendari(){ 
+
+            if ($this-&#62;form_validation-&#62;run() == FALSE)
+            {             
+                $this-&#62;load-&#62;model('actualitat_model');   
+                $this-&#62;load-&#62;view('admin/gestiocalendari');
+            }
+           $competicio = $this-&#62;input-&#62;post('competicio');
+           $data_hora_1 = $this-&#62;input-&#62;post('data_hora_1');
+           $data_hora_2 = $this-&#62;input-&#62;post('data_hora_2'); 
+           $estat = $this-&#62;input-&#62;post('estat'); 
+           $categoria = $this-&#62;input-&#62;post('categoria');
+           $lloc = $this-&#62;input-&#62;post('lloc');
+           $resultats = $this-&#62;input-&#62;post('resultats');
+           if($estat=='Escolar' || $estat=='Master'){ 
+            $categoria=NULL;
+          }
+           $this-&#62;load-&#62;model('actualitat_model');
+           $this-&#62;actualitat_model-&#62;inserta_calendari($competicio, $data_hora_1, $data_hora_2, $estat, $categoria, $lloc, $resultats);
+           redirect('admin/calendari');
+              
+  }
+
+    </PRE
+><P
+> Aquest es el actualitat_model i la funcio segÃ¼ent fa una select a la BD per insertar les dades </P
+><PRE
+CLASS="programlisting"
+>&#60;?php
+
+  public function inserta_calendari($competicio, $data_hora_1, $data_hora_2, $estat, $categoria,  $lloc, $resultats){
+    $data = array(
+      'competicio' =&#62; $competicio,
+      'data_hora_1' =&#62; $data_hora_1,
+      'data_hora_2' =&#62; $data_hora_2,
+      'estat' =&#62; $estat,
+      'categoria' =&#62; $categoria,
+      'lloc' =&#62; $lloc,
+      'resultats' =&#62; $resultats
+    );
+    $this-&#62;db-&#62;insert('DETALL_CALENDARI', $data);
+  }
+
+    </PRE
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c41.html"
+ACCESSKEY="P"
+>Anterior</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Inici</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c53.html"
+ACCESSKEY="N"
+>Següent</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Tauler Administratiu --&#62; CRUD Actualitat (Delete)</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Tauler Administratiu --&#62; CRUD Calendari (Delete)</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

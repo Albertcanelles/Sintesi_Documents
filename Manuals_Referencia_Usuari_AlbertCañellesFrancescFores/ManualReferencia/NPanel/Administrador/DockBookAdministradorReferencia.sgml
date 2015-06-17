@@ -1,0 +1,1017 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<book lang="ca">
+  <bookinfo>
+    <date>4 de Juny de 2015</date>
+    <title>Guia de Referencia: Administrador</title>
+    <author>
+  <firstname>Albert</firstname>
+      <surname>Cañelles Panisello</surname>
+      <affiliation>
+        <orgname>IES EBRE</orgname>
+      </affiliation>
+    </author>
+    <author>
+  <firstname>Francesc</firstname>
+      <surname>Fores Campos</surname>
+      <affiliation>
+        <orgname>IES EBRE</orgname>
+      </affiliation>
+    </author>
+  </bookinfo>
+
+  <chapter> 
+    <title>Tauler Administratiu --> Inici</title>
+
+    <para>Aquesta funcion esta ubicada al Controlador Admin el que fa es comprovar si estas logueijat al sistema i et dirigeix a la vista Index</para>
+
+    <programlisting language="php"><![CDATA[<?php
+
+   function index(){
+    if($this->session->userdata('logueado') && ($this->session->userdata('ROL')=='ENTRENADOR' || $this->session->userdata('ROL')=='ADMINISTRADOR')){      
+   $this->load->view('admin/index'); 
+   }else{
+     $this->load->view('client/login');
+   }
+  } 
+
+    ]]></programlisting>
+
+   <programlisting language="php"><![CDATA[<?php
+
+<div class="large"><?php echo $this->db->count_all_results('ACTUALITAT');?></div>
+
+    ]]></programlisting>
+    
+    <para> Amb l'anterior comanda a la vista fem un count de tots els registres a la taula actualitat per saber el numero d'entrades i porta un control </para>
+  </chapter> 
+
+<chapter> 
+    <title>Tauler Administratiu --> CRUD Actualitat (Create) </title>
+<para> Aquesta es la funció que comprova que els camps estiguen correctes hi tambe comprovar si la foto es un format compatible si no mostra errors </para>
+     <programlisting language="php"><![CDATA[<?php
+
+ function insertar_actualitat(){
+    $this->form_validation->set_rules('titol','Titul','required');
+    $this->form_validation->set_rules('comentari', 'Comentari', 'required');
+    $this->form_validation->set_message('required', '<div class="alert alert-danger alert-dismissable">
+                                            <button type="button" data-dismiss="alert" aria-hidden="true" class="close">&times;</button>
+                                            <strong>Error!</strong> El camp %s es obligat</div>');
+
+    if ($this->form_validation->run() == FALSE)
+        {
+        $this->load->model('actualitat_model');   
+          $data = $this->actualitat_model->getActualitat();
+          $this->load->view('admin/gestioactualitat', $data);
+        }
+        else
+        {
+            $titol = $this->input->post('titol');
+        $comentari = $this->input->post('comentari');
+        $config_file = array (
+        'upload_path' => './actualitat/',
+        'allowed_types' => 'png|jpg|jpeg',
+        'overwrite' => false,
+        'max_size' => 0,
+        'max_width' => 0,
+        'max_height' => 0,
+        'encrypt_name' => false,
+        'remove_spaces' => true,
+        );
+        $this->upload->initialize($config_file);
+        if (!$this->upload->do_upload('foto')) {
+          redirect('admin/actualitat');
+          $error = $this->upload->display_errors();
+          echo $error;
+        }
+        else {
+          $foto = base_url()."actualitat/".$this->upload->file_name;      
+          $this->load->model('actualitat_model');
+          $this->actualitat_model->crearActualitat($titol, $comentari, $foto);
+          redirect('admin/actualitat');
+            }
+      }
+  }
+
+    ]]></programlisting>
+
+<para> Aquest es el actualitat_model i la funcio següent fa una select a la BD per insertar les dades </para>
+
+     <programlisting language="php"><![CDATA[<?php
+
+  public function crearActualitat($titol, $comentari, $foto) {
+    $data = array(
+      'titol' => $titol,
+      'comentari' => $comentari,
+      'foto' => $foto
+    );
+ 
+    $this->db->insert('ACTUALITAT', $data);
+  }
+
+    ]]></programlisting>
+
+
+  </chapter> 
+
+  
+  <chapter> 
+    <title>Tauler Administratiu --> CRUD Actualitat (Read) </title>
+<para> Aquesta es la funció actualitat del controlador Admin comprova si estas logeijat i reb dades del model i les pasa a la vista </para>
+     <programlisting language="php"><![CDATA[<?php
+
+ function actualitat(){ 
+    if($this->session->userdata('logueado') && ($this->session->userdata('ROL')=='ENTRENADOR' || $this->session->userdata('ROL')=='ADMINISTRADOR')){      
+      $this->load->model('actualitat_model');   
+            $data = $this->actualitat_model->getActualitat();
+              $this->load->view('admin/gestioactualitat', $data);  
+    }else{
+        $this->load->view('client/login');
+    }             
+  }
+
+    ]]></programlisting>
+
+<para> Aquest es el actualitat_model i la funcio següent fa una select a la BD per agafar les dades </para>
+
+     <programlisting language="php"><![CDATA[<?php
+
+  public function getActualitat() {
+    $this->db->select('id_blog, titol, foto');
+    $query = $this->db->get('ACTUALITAT');
+    return $query->result_array();
+  }
+    ]]></programlisting>
+
+<para>Aquesta es la vista on rebem l'actualitat la 1a vista sempre estara resaltada</para>
+
+     <programlisting language="php"><![CDATA[<?php
+         <?php 
+					$i=1;
+					foreach($this->_ci_cached_vars as $index => $llistaractualitat){ 
+				?>
+					<?php
+				    	if($i==3 || $i==6  || $i==9){?>
+				    	<div class="row">
+				    	<?php				    		
+				    	};?>			        	
+			        	<div class="col-xs-12 col-sm-4 col-md-4">
+				            <div class="thumbnail <?php if ($i==1){echo "card2";}else{echo "card";}?>">
+				                <img  src="<?php echo $llistaractualitat['foto'];?>" />
+				                <div class="caption">
+				                <h4><?php echo $llistaractualitat['titol']; ?></h4>
+				                    <p>
+				                    	<?php echo substr($llistaractualitat['comentari'],0,300); ?>
+				                    </p>
+		                            <div class="btn-read-more-container">
+		                            <form method="post" action="<?php echo base_url() ?>index.php/client/llegirmes">		                                	
+		                                	<input type="hidden" class="form-control" name='id' value="<?php echo $llistaractualitat['id_blog']; ?>">
+			                                <button type="submit" class="btn  btn-read-more" >
+			                              		Llegir més <i class="fa fa-angle-right"></i>
+			                              	</button>
+		                              		                              		
+		                              	</form>
+		                            </div>
+				                </div>
+				            </div>
+			            </div>
+			           <?php if($i==3 || $i==6  || $i==9){?>
+				           	</div>
+				           	<?php	    		
+					    	};?>
+			    	<?php
+				    	if($i==9){
+				    		break;
+				    	};
+			    	$i++;
+			    	};
+		    	?>
+    ]]></programlisting>
+
+  </chapter> 
+
+  <chapter> 
+    <title>Tauler Administratiu --> CRUD Actualitat (Update) </title>
+<para> Aquesta es la funció que comprova que els camps estiguen correctes hi tambe comprovar si la foto es un format compatible si no mostra errors </para>
+     <programlisting language="php"><![CDATA[<?php
+
+ FALTA
+
+    ]]></programlisting>
+
+<para> Aquest es el actualitat_model i la funcio següent fa una select a la BD per insertar les dades </para>
+
+     <programlisting language="php"><![CDATA[<?php
+
+FALTA
+
+    ]]></programlisting>
+
+
+  </chapter> 
+
+  <chapter> 
+    <title>Tauler Administratiu --> CRUD Actualitat (Delete) </title>
+<para> Aquesta es la funció que pasa al model la actualitat que ha d'eliminar </para>
+     <programlisting language="php"><![CDATA[<?php
+
+  function eliminar_actualitat() {
+          $this->load->model('actualitat_model');   
+         $id = $this->uri->segment(3);
+         $this->actualitat_model->eliminar_actualitat($id);
+         redirect('admin/actualitat');  
+  }
+
+    ]]></programlisting>
+
+<para> Aquest es el actualitat_model i la funcio següent fa una select a la BD per eliminar les dades </para>
+
+     <programlisting language="php"><![CDATA[<?php
+
+  public  function eliminar_actualitat($id){
+      $this->db->where('id_BLOG',$id);
+      return $this->db->delete('ACTUALITAT');
+    }
+
+    ]]></programlisting>
+
+
+  </chapter> 
+
+<chapter>
+    <title>Tauler Administratiu --> CRUD Calendari (Inserts)</title>
+    <para> Aqui tenim la funció per insertar una competicio primer que tot fem una comprovació als camps i si son correctes procedim a pujar-los mes tard quan la competicio ja esta acabada podem pujar el pdf amb els resultats</para>
+    <programlisting language="php"><![CDATA[<?php
+
+  function inserta_calendari(){ 
+
+            if ($this->form_validation->run() == FALSE)
+            {             
+                $this->load->model('actualitat_model');   
+                $this->load->view('admin/gestiocalendari');
+            }
+           $competicio = $this->input->post('competicio');
+           $data_hora_1 = $this->input->post('data_hora_1');
+           $data_hora_2 = $this->input->post('data_hora_2'); 
+           $estat = $this->input->post('estat'); 
+           $categoria = $this->input->post('categoria');
+           $lloc = $this->input->post('lloc');
+           $resultats = $this->input->post('resultats');
+           if($estat=='Escolar' || $estat=='Master'){ 
+            $categoria=NULL;
+          }
+           $this->load->model('actualitat_model');
+           $this->actualitat_model->inserta_calendari($competicio, $data_hora_1, $data_hora_2, $estat, $categoria, $lloc, $resultats);
+           redirect('admin/calendari');
+              
+  }
+
+    ]]></programlisting>
+
+<para> Aquest es el actualitat_model i la funcio següent fa una select a la BD per insertar les dades </para>
+
+     <programlisting language="php"><![CDATA[<?php
+
+  public function inserta_calendari($competicio, $data_hora_1, $data_hora_2, $estat, $categoria,  $lloc, $resultats){
+    $data = array(
+      'competicio' => $competicio,
+      'data_hora_1' => $data_hora_1,
+      'data_hora_2' => $data_hora_2,
+      'estat' => $estat,
+      'categoria' => $categoria,
+      'lloc' => $lloc,
+      'resultats' => $resultats
+    );
+    $this->db->insert('DETALL_CALENDARI', $data);
+  }
+
+    ]]></programlisting>
+
+
+  </chapter> 
+
+<chapter>
+    <title>Tauler Administratiu --> CRUD Calendari (Delete)</title>
+    <para> Aquí tenim la funció del controlador per eliminar competicions reben la ID de la vista i pasan-la al model</para>
+    <programlisting language="php"><![CDATA[<?php
+
+		function eliminar_calendari() {
+	    		$this->load->model('actualitat_model');		
+				 $id = $this->uri->segment(3);
+				 $this->actualitat_model->eliminar_calendari($id);
+				 redirect('admin/calendari');	
+	}
+
+
+    ]]></programlisting>
+
+<para> Aquest es el actualitat_model i la funcio següent fa una select a la BD per eliminar les dades </para>
+
+     <programlisting language="php"><![CDATA[<?php
+
+   public  function eliminar_calendari($id){
+      $this->db->where('ID_COMPETICIO',$id);
+      return $this->db->delete('DETALL_CALENDARI');
+    }
+
+    ]]></programlisting>
+
+    
+  </chapter> 
+
+
+  <chapter>
+    <title>Tauler Administratiu --> CRUD Calendari (Update)</title>
+    <para> Per eliminar una compeitició aquest seria el </para>
+    <programlisting language="php"><![CDATA[<?php
+
+  FALTA
+    ]]></programlisting>
+
+<para> Aquest es el actualitat_model i la funcio següent fa una select a la BD per insertar les dades </para>
+
+     <programlisting language="php"><![CDATA[<?php
+
+ FALTA
+    ]]></programlisting>
+
+    
+  </chapter> 
+ 
+ <chapter> 
+    <title>Tauler Administratiu --> CRUD Documents (Insert)</title>
+
+    <para>Aquesta es la funció per pujar documents com podeu comprovar estem pasant a una llibreria parametres a cumplir a l'hora de pujar el document en aquest cas que ha de ser un PDF si volem afetgir mes extencions es separen amb la | el directori que esta situat a l'arrel del codeigniter amb permisos adecuats  </para>
+    <programlisting language="php"><![CDATA[<?php
+
+		function insertar_document(){			       
+				   $config_file = array (
+					'upload_path' => './documents/',
+					'allowed_types' => 'pdf',
+					'overwrite' => false,
+					'max_size' => 0,
+					'max_width' => 0,
+					'max_height' => 0,
+					'encrypt_name' => false,
+					'remove_spaces' => true,
+					);
+				   $this->upload->initialize($config_file);
+				   if (!$this->upload->do_upload('document')) {
+						redirect('admin/documents');
+						$error = $this->upload->display_errors();
+						echo $error;
+					}
+					else {
+				   $nom = $this->upload->file_name;
+				   $document = base_url()."documents/".$this->upload->file_name;		  
+				   $this->load->model('actualitat_model');
+				   $this->actualitat_model->crearDocument($nom, $document);
+				   redirect('admin/documents');
+	        		}
+	}
+
+
+    ]]></programlisting>
+    
+    <para>Aquí tenim la funció que carrega a la base de dades els arxius al model_actualitat </para>
+    <programlisting language="php"><![CDATA[<?php
+ 
+		 public function crearDocument($nom, $document) {
+		    $data = array(
+		      'titul' => $nom,
+		      'document' => $document
+		    );
+		 
+		    $this->db->insert('DOCUMENTS', $data);
+		  }
+    ]]></programlisting>
+  </chapter> 
+ 
+ <chapter> 
+    <title>Tauler Administratiu --> CRUD Documents (Delete)</title>
+
+    <para>Aquí tenim la funció que agafa el ID de la vista i el pasa al model per poder eliminar el document</para>
+    <programlisting language="php"><![CDATA[<?php
+
+		function eliminar_document() {
+	    		$this->load->model('actualitat_model');		
+				$id = $this->uri->segment(3);
+				$this->actualitat_model->eliminar_document($id);
+				redirect('admin/documents');
+	}
+
+
+    ]]></programlisting>
+    
+    <para>Aquí tenim la funció que carrega a la base de dades que elimina els documents al model_actualitat </para>
+    <programlisting language="php"><![CDATA[<?php
+ 
+		   public  function eliminar_document($id){
+      $this->db->where('ID_DOCUMENT',$id);
+      return $this->db->delete('DOCUMENTS');
+    }
+    ]]></programlisting>
+  </chapter> 
+ 
+<chapter> 
+    <title>Tauler Administratiu --> CRUD Usuaris (Insert)</title>
+
+    <para>Aquí tenim la funció per insertar usuaris a la part administrador en aquesta part ja interve l'script per calcular la teva categoria directament apartí de la teva edat </para>
+    
+       <programlisting language="php"><![CDATA[<?php
+ function insertar_usuari(){	
+		        $this->form_validation->set_rules('usuari','usuari','required');
+		        $this->form_validation->set_rules('contrasenya', 'contrasenya', 'required');
+		        if ($this->form_validation->run() == FALSE)
+		        {		        	
+		            $this->load->model('actualitat_model');		
+				    $data['usuaris'] = $this->actualitat_model->getUsuaris();
+				    $data['validar_usuari'] = $this->actualitat_model->getUsuaris_validar();
+				    $this->load->view('admin/gestiousuaris', $data);
+		        }
+		        else
+		        {
+		           
+				   $config_file = array (
+					'upload_path' => './actualitat/',
+					'allowed_types' => 'png|jpg|jpeg',
+					'overwrite' => false,
+					'max_size' => 0,
+					'max_width' => 0,
+					'max_height' => 0,
+					'encrypt_name' => false,
+					'remove_spaces' => true,
+					);
+				   $this->upload->initialize($config_file);
+				   if (!$this->upload->do_upload('foto')) {
+						redirect('admin/usuaris');
+						$error = $this->upload->display_errors();
+						echo $error;
+					}
+					else {
+				   $foto = base_url()."actualitat/".$this->upload->file_name;	
+				   $usuari = $this->input->post('usuari');
+				   $contrasenya = md5($this->input->post('contrasenya'));
+				   $email = $this->input->post('email');
+				   $nom = $this->input->post('nom'); 
+				   $cognoms = $this->input->post('cognoms');
+				   $data_naixement = $this->input->post('data_naixement');  
+				   $rol = $this->input->post('rol'); 
+				   $estat = $this->input->post('estat'); 
+				   $categoria = $this->input->post('categoria'); 
+				   $this->load->model('actualitat_model');
+				   if($estat=='Escolar' || $estat=='Master'){ 
+						$categoria=NULL;
+					}
+				   $this->actualitat_model->insertaUsuari($usuari, $contrasenya, $email, $nom, $cognoms, $foto, $data_naixement, $rol, $estat, $categoria);
+				   redirect('admin/usuaris');
+	        	   }		          
+	        	}
+	}
+    ]]></programlisting>
+    <para>Aquí tenim la funció que carrega a la base de dades que inserta els Usuaris al model_actualitat </para>
+ <programlisting language="php"><![CDATA[<?php
+
+	public function insertaUsuari($contrasenya, $nom, $cognoms, $foto, $data_naixement, $rol, $estat, $categoria, $sexe, $email) {
+    $data = array(
+      'contrasenya' => $contrasenya,
+      'nom' => $nom,
+      'cognoms' => $cognoms,
+      'foto' => $foto,
+      'data_naixement' => $data_naixement,
+      'rol' => $rol,
+      'estat' => $estat,
+      'categoria' => $categoria,
+      'sexe' => $sexe,
+      'email' => $email,
+    );
+    $this->db->insert('USUARIS_INTERNS', $data);
+  }
+
+
+    ]]></programlisting>
+  </chapter> 
+ 
+<chapter> 
+    <title>Tauler Administratiu --> CRUD Usuaris (Delete)</title>
+
+    <para>Aquí tenim la funció per eliminar els usuaris reben la ID de la vista i pasan-la al model </para>
+    
+       <programlisting language="php"><![CDATA[<?php
+ function eliminar_usuari() {
+	    		$this->load->model('actualitat_model');		
+				 $id = $this->uri->segment(3);
+				 $this->actualitat_model->eliminar_usuari($id);
+				 redirect('admin/usuaris');	
+	}
+    ]]></programlisting>
+    <para>Aquí tenim la funció que carrega a la base de dades que elimina els Usuaris al model_actualitat </para>
+ <programlisting language="php"><![CDATA[<?php
+
+	  public  function eliminar_usuari($id){
+      $this->db->where('ID_USUARI',$id);
+      return $this->db->delete('USUARIS_INTERNS');
+    }	
+
+
+    ]]></programlisting>
+  </chapter> 
+
+  <chapter> 
+    <title>Tauler Administratiu --> CRUD Usuaris (Update)</title>
+
+    <para>Aquí tenim la funció per modifica els usuaris reben la ID de la vista i pasan-la al model </para>
+    
+       <programlisting language="php"><![CDATA[<?php
+ function modificar_usuari() {
+					$config_file = array (
+					'upload_path' => './actualitat/',
+					'allowed_types' => 'png|jpg|jpeg',
+					'overwrite' => false,
+					'max_size' => 0,
+					'max_width' => 0,
+					'max_height' => 0,
+					'encrypt_name' => false,
+					'remove_spaces' => true,
+					);
+				   $this->upload->initialize($config_file);
+				  
+				   $this->load->model('actualitat_model');		
+				   $id = $this->uri->segment(3);
+				   
+				   $foto = base_url()."actualitat/".$this->upload->file_name;	
+				   $usuari = $this->input->post('usuari');
+				   $email = $this->input->post('email');
+				   $nom = $this->input->post('nom'); 
+				   $cognoms = $this->input->post('cognoms');
+				   $data_naixement = $this->input->post('data_naixement');  
+				   $rol = $this->input->post('rol'); 
+				   $estat = $this->input->post('estat'); 
+				   $categoria = $this->input->post('categoria'); 
+				   $this->load->model('actualitat_model');
+				   if($estat=='Escolar' || $estat=='Master'){ 
+						$categoria=NULL;
+					}
+				   $this->actualitat_model->update_usuari($id, $usuari, $contrasenya, $email, $nom, $cognoms, $foto, $data_naixement, $rol, $estat, $categoria);
+				   redirect('admin/usuaris');
+	        	   
+	}
+    ]]></programlisting>
+    <para>Aquí tenim la funció que carrega a la base de dades que modifica els Usuaris al model_actualitat </para>
+ <programlisting language="php"><![CDATA[<?php
+
+	   function update_usuari($id, $nom, $cognoms, $foto, $data_naixement, $rol, $estat, $categoria, $sexe, $email) {
+        
+        $data = array(
+        'email' => $email,
+        'nom' => $nom,
+        'cognoms' => $cognoms,
+        'foto' => $foto,
+        'data_naixement' => $data_naixement,
+        'rol' => $rol,
+        'estat' => $estat,
+        'categoria' => $categoria
+        );
+        $this->db->where('ID_USUARI', $id);
+        return $this->db->update('USUARIS_INTERNS ', $data);
+    }
+
+
+    ]]></programlisting>
+  </chapter> 
+
+  <chapter> 
+    <title>Tauler Administratiu --> CRUD Usuaris (Validar Usuaris)</title>
+
+    <para>Aquí tenim la funció per validar els usuaris reben la ID de la vista i pasan-la al model </para>
+    
+       <programlisting language="php"><![CDATA[<?php
+ function validar_usuari(){	
+		if($this->session->userdata('logueado') && ($this->session->userdata('ROL')=='ADMINISTRADOR')){			
+				$id = $this->uri->segment(3);
+				$this->load->model('actualitat_model');	
+				$this->actualitat_model->validar_usuari($id);
+				redirect('admin/usuaris');
+		}else{
+				$this->load->view('client/login');
+		}		
+	}
+    ]]></programlisting>
+    
+
+  </chapter> 
+  
+<chapter> 
+    <title>Tauler Administratiu --> CRUD Galeria (Insert)</title>
+
+    <para>Aquí tenim la funció que crea la galeria cada cop que creem una galeria es crea un nou directori especial per aquella galeria i alli dins es fiquen les imatges  </para>
+    
+       <programlisting language="php"><![CDATA[<?php
+ 		function insert_galeria (){
+	$this->form_validation->set_rules('titol','Titul','required');
+	if ($this->form_validation->run() == FALSE)
+	{
+	echo "string";
+	}
+	else
+	{
+	$titol = $this->input->post('titol');
+	$url = base_url()."galeria/".$titol."";
+	mkdir('./galeria/'.$titol.'/');
+	chmod('./galeria/'.$titol, 0777);
+	$config_file = array (
+	'upload_path' => './galeria/'.$titol.'/',
+	'allowed_types' => 'png|jpg|jpeg',
+	'overwrite' => false,
+	'max_size' => 0,
+	'max_width' => 0,
+	'max_height' => 0,
+	'encrypt_name' => false,
+	'remove_spaces' => true,
+	);
+	$this->upload->initialize($config_file);
+	if(!$this->upload->do_multi_upload('archivos')) {
+	echo "mal";
+	}
+	else {
+	
+	}
+	$document = base_url()."galeria/".$titol."/".$this->upload->file_name;
+	
+	
+	$tot = count($this->upload->get_multi_upload_data());
+	//este for recorre el arreglo
+	$this->load->model('actualitat_model');
+	$this->actualitat_model->crearGaleria($titol, $url);
+	for ($i = 0; $i < $tot; $i++){
+	//con el indice $i, poemos obtener la propiedad que desemos de cada archivo
+	//para trabajar con este
+	echo $foto =base_url()."galeria/".$titol."/".$this->upload->get_multi_upload_data()[$i]["file_name"];
+	echo("<br />");
+	$this->load->model('actualitat_model');
+	$this->actualitat_model->crearGaleria_foto($titol, $foto);
+	
+	}redirect('admin/galeria');
+	}
+    ]]></programlisting>
+    
+    <para>Aquí tenim la funció del model que ens crea la galeria </para>
+
+
+
+       <programlisting language="php"><![CDATA[<?php
+ public function crearGaleria_foto($titol, $foto) {
+    $data = array(
+      'ID_GALERIA' => $titol,
+      'URL' => $foto
+    );		
+	}
+    ]]></programlisting>
+    public function crearGaleria_foto($titol, $foto) {
+    $data = array(
+      'ID_GALERIA' => $titol,
+      'URL' => $foto
+    );
+  </chapter> 
+
+  <chapter> 
+    <title>Tauler Administratiu --> CRUD Usuaris (Delete)</title>
+
+    <para>Aquí tenim la funció per eliminar la galeria reben la ID de la vista i pasan-la al model </para>
+    
+       <programlisting language="php"><![CDATA[<?php
+		FALTA	
+
+    ]]></programlisting>
+    
+    
+  </chapter> 
+
+
+<chapter> 
+    <title>Scripts --> Script Usuaris</title>
+
+    <para>Aquí tenim l'script que ens calcula la nostra categoria partint dels criteris posats per la federació que serien el Sexe, el estat (Escolar,Federat,Master) i la edat per definir la categoria </para>
+    
+       <programlisting language="php"><![CDATA[<?php
+
+   function calcular_edad($fecha){
+					    $dias = explode("-", $fecha, 3);
+					    $dias = mktime(0,0,0,$dias[1],$dias[0],$dias[2]);
+					    $edad = (int)((time()-$dias)/31556926 );
+					    return $edad;
+					}
+					// Funcio per calcular la categoria tenin en compte el sexe 
+					function calcular_categoria($sexe,$edad,$estat) {
+						switch($estat){
+							case 'Escolar':
+								switch ($edad) {
+									case 7:
+									case 8:
+										return 'PB';
+										break;
+									case 9:
+									case 10:
+										return 'B';
+										break;
+									case 11:
+									case 12:
+										return 'ALE';
+										break;
+									case 13:
+									case 14:
+										return 'INF';
+										break;
+									case 15:
+									case 16:
+										return 'JUV';
+										break;
+									default:
+									return 'CAD';
+									break;
+								}
+								break;
+						case 'Federat':
+						switch ($sexe) {
+							case 'Masculí':
+								switch ($edad) {
+									case 8:
+										return 'PB';
+										break;
+									case 9:
+									case 10:
+									case 11:
+										return 'B';
+										break;
+									case 12:
+									case 13:
+										return 'ALE';
+										break;
+									case 14:
+									case 15:
+									case 16:
+										return 'INF';
+										break;
+									case 17:
+									case 18:
+										return 'JUV';
+										break;
+									case 19:
+									case 20:
+										return 'ABJ';
+										break;
+									default:
+									return 'ABS'; 
+									break;
+								}
+								break;
+							case 'Femení':
+								switch ($edad) {
+									case 8:
+										return 'PB';
+										break;
+									case 9:
+									case 10:
+										return 'B';
+										break;
+									case 11:
+									case 12:
+										return 'ALE';
+										break;
+									case 13:
+									case 14:
+										return 'INF';
+										break;
+									case 15:
+									case 16:
+										return 'JUV';
+										break;
+									case 17:
+									case 18:
+										return 'ABJ';
+										break;
+									default:
+										return 'ABS';
+								}
+						}
+						break;
+					}
+					}
+					function calcular_temporada($anys) {
+					            // Agafem el principi de cada temporada nova 
+					            $ninici = "1-09-".date("Y");
+					            $nfinal = "31-08-".date("Y", strtotime('+1 year'));
+					            // Convertixo les dates a format date           
+					            $minici =  strtotime($ninici);
+					            $mfinal = strtotime($nfinal);
+					            // Agafo la data pasada per parametre que es uns string i la paso a DATA
+					            $fechaNaixement = strtotime($anys);
+					            $dataarreglada= date('d-m-Y',$fechaNaixement);
+					            for($i=$minici; $i<=$mfinal; $i+=86400) {
+					                if( date('d',$fechaNaixement)== date('d',$i) && date('m',$fechaNaixement)== date('m',$i)) {
+					                   $edat = date("Y", strtotime('+1 year')) - date('Y',$fechaNaixement);
+					                    return $edat;
+					                }
+					            }
+						}
+    ]]></programlisting>
+    
+    
+  </chapter> 
+
+    <chapter> 
+    <title>Scripts --> Script Calendari</title>
+
+    <para>Aquí tenim la funció per eliminar la galeria reben la ID de la vista i pasan-la al model </para>
+    
+       <programlisting language="php"><![CDATA[<?php
+
+$mail = "Prueba de mensaje";
+//Titulo
+$titulo = "PRUEBA DE TITULO";
+//cabecera
+$headers = "MIME-Version: 1.0\r\n"; 
+$headers .= "Content-type: text/html; charset=iso-8859-1\r\n"; 
+//dirección del remitente 
+$headers .= "From: Geeky Theory <ffores4@gmail.com>\r\n";
+//Enviamos el mensaje a info@geekytheory.com 
+$bool = mail("ffores93@gmail.com",$titulo,$mail,$headers);
+if($bool){
+    echo "Mensaje enviado";
+}else{
+    echo "Mensaje no enviado";
+}*/
+?><!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<?php
+	include '';
+ ?>
+</body>
+</html>
+    ]]></programlisting>
+    
+    
+  </chapter> 
+
+<chapter> 
+    <title>Login --> Login i Sortida</title>
+
+    <para>Aquí tenim la funció per loggeijarmos al sistema d'administració i per deslogeijarmos comprovan el teu correu electronic i contrasenya </para>
+    
+       <programlisting language="php"><![CDATA[<?php
+ public function iniciar_sessio() {       //processar formulari
+	      if ($this->input->post()) {
+	         $email = $this->input->post('email');
+	         $contrasenya = md5($this->input->post('contrasenya'));
+	         $this->load->model('client_model');
+	         $usuario = $this->client_model->usuario_por_nombre_contrasena($email, $contrasenya);
+	         
+	         if ($usuario) {	         	     
+	            $usuari_data = array(
+	               'ID_USUARI' => $usuario->ID_USUARI,
+	               'EMAIL' => $email->EMAIL,
+	               'NOM' => $usuario->NOM,
+	               'COGNOMS' => $usuario->COGNOMS,
+	               'FOTO' => $usuario->FOTO,
+	               'DATA_NAIXEMENT' => $usuario->DATA_NAIXEMENT,
+	               'ROL' => $usuario->ROL,
+	               'ESTAT' => $usuario->ESTAT,
+	               'CATEGORIA' => $usuario->CATEGORIA,
+	               'logueado' => TRUE
+	            );	            
+	            $this->session->set_userdata($usuari_data);
+	            redirect('client/index');
+	         } else {
+	            redirect('client/login');
+	         }
+	      } else {
+	         $this->login();
+	      }
+	   }
+	  
+	   public function cerrar_sesion() {
+	      $usuario_data = array(
+	         'logueado' => FALSE
+	      );
+	      $this->session->set_userdata($usuario_data);
+	      $this->session->sess_destroy();
+	      redirect('client/login');
+	   }
+    ]]></programlisting>
+    
+    
+  </chapter> 
+
+<chapter> 
+    <title>Contacta --> Formulari de contacta pàgina web</title>
+
+    <para>Aquí tenim el forumali de contacta que envia les peticions del usuaris a l'administrador del compte de correu  </para>
+    
+       <programlisting language="php"><![CDATA[<?php
+		 public function enviar(){
+	   			$this->load->library('email');
+		        $this->form_validation->set_rules('nom', 'nom', 'required');
+		        $this->form_validation->set_rules('email', 'email', 'required');
+		        $this->form_validation->set_rules('asumpte', 'asumpte', 'required');
+        	   	$this->form_validation->set_rules('missatge','missatge','required');
+		        if ($this->form_validation->run() == FALSE){		        	
+	            	$this->load->view('client/contacta');
+		        }
+		        else
+		        { 	
+		        		$configGmail = array(
+							'protocol' => 'smtp',
+							'smtp_host' => 'ssl://smtp.gmail.com',
+							'smtp_port' => 465,
+							'smtp_user' => $this->input->post('email'), //email al del emissor
+							'smtp_pass' => $this->input->post('contrasenya'),
+							'mailtype' => 'html',
+							'charset' => 'utf-8',
+							'newline' => "\r\n"
+						); 
+		        	$this->email->initialize($configGmail);
+					$this->email->from($this->input->post('email'),$this->input->post('nom'));
+					$this->email->to('ffores93@gmail.com', 'Admin'); //email de club de natacio
+					$this->email->subject($this->input->post('asumpte'));
+					$this->email->message($this->input->post('missatge'));
+					
+					if($this->email->send()){
+		            	$this->session->set_flashdata('envio', '<button type="button" class="btn btn-success btn-sm">
+					                           <p>Email enviat correctamente</p> <span class="glyphicon glyphicon-ok"></span> 
+					                        </button>');
+		            	
+			        }else{
+			            $this->session->set_flashdata('envio', '<button type="button" class="btn btn-danger btn-sm">
+					                            <span class="glyphicon glyphicon-remove"></span> 
+					                        </button>');
+			        }	         
+			        
+					echo $this->email->print_debugger();
+		        	redirect("client/contacta");
+				}			
+	      
+	   }   
+
+    ]]></programlisting>
+    
+    
+  </chapter> 
+
+<chapter> 
+    <title>Tauler d'administració --> Gets</title>
+
+    <para>Aquí tenim tots els gets que carreguen les dades a les taules  </para>
+    
+       <programlisting language="php"><![CDATA[<?php
+
+  public function getActualitat() {
+    $this->db->select('id_blog, titol, foto');
+    $query = $this->db->get('ACTUALITAT');
+    return $query->result_array();
+  }
+    public function getgaleria() {
+    $this->db->select('NOM, URL');
+    $query = $this->db->get('GALERIES');
+    return $query->result_array();
+  }
+public function getUsuaris() {
+    $this->db->select('ID_USUARI, NOM, EMAIL, COGNOMS, FOTO, DATA_NAIXEMENT, ROL, ESTAT, CATEGORIA, SEXE');
+    $query = $this->db->get('USUARIS_INTERNS');
+    return $query->result_array();
+  }
+  public function getUsuaris_validar() {
+    $this->db->select('ID_USUARI, NOM, EMAIL, COGNOMS, FOTO, DATA_NAIXEMENT, ROL, ESTAT, CATEGORIA, SEXE');
+    $query = $this->db->get('VALIDAR_USUARIS');
+    return $query->result_array();
+  }
+
+   public function getDocument() {
+    $this->db->select('id_document, titul, document');
+    $query = $this->db->get('DOCUMENTS');
+    return $query->result_array();
+  }
+  public function get_calendari() {
+    $this->db->select('ID_COMPETICIO, COMPETICIO, DATA_HORA_1, DATA_HORA_2, CATEGORIA, ESTAT, LLOC, RESULTATS');
+    $query = $this->db->get('DETALL_CALENDARI');
+    return $query->result_array();
+  }
+  public function get_calendari_usuaris() {
+    $this->db->select('ID_COMPETICIO, COMPETICIO, DATA_HORA_1, DATA_HORA_2, CATEGORIA, ESTAT, LLOC, RESULTATS');
+    $where = array('ESTAT ' => $this->session->userdata('ESTAT') , 'CATEGORIA ' => $this->session->userdata('CATEGORIA'));
+     $this->db->where($where);
+    $query = $this->db->get('DETALL_CALENDARI');
+    
+    ]]></programlisting>
+    
+    
+  </chapter> 
+
+
+
+ 
+</book>

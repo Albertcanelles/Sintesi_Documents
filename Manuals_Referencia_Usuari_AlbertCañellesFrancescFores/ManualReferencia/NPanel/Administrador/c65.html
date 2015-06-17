@@ -1,0 +1,185 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Tauler Administratiu --&#62; CRUD Documents (Insert)</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="Guia de Referencia: Administrador"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Tauler Administratiu --> CRUD Calendari (Update)"
+HREF="c59.html"><LINK
+REL="NEXT"
+TITLE="Tauler Administratiu --> CRUD Documents (Delete)"
+HREF="c71.html"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Guia de Referencia: Administrador</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c59.html"
+ACCESSKEY="P"
+>Anterior</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c71.html"
+ACCESSKEY="N"
+>Següent</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="AEN65"
+></A
+>Capítol 9. Tauler Administratiu --&#62; CRUD Documents (Insert)</H1
+><P
+>Aquesta es la funciÃ³ per pujar documents com podeu comprovar estem pasant a una llibreria parametres a cumplir a l'hora de pujar el document en aquest cas que ha de ser un PDF si volem afetgir mes extencions es separen amb la | el directori que esta situat a l'arrel del codeigniter amb permisos adecuats  </P
+><PRE
+CLASS="programlisting"
+>&#60;?php
+
+		function insertar_document(){			       
+				   $config_file = array (
+					'upload_path' =&#62; './documents/',
+					'allowed_types' =&#62; 'pdf',
+					'overwrite' =&#62; false,
+					'max_size' =&#62; 0,
+					'max_width' =&#62; 0,
+					'max_height' =&#62; 0,
+					'encrypt_name' =&#62; false,
+					'remove_spaces' =&#62; true,
+					);
+				   $this-&#62;upload-&#62;initialize($config_file);
+				   if (!$this-&#62;upload-&#62;do_upload('document')) {
+						redirect('admin/documents');
+						$error = $this-&#62;upload-&#62;display_errors();
+						echo $error;
+					}
+					else {
+				   $nom = $this-&#62;upload-&#62;file_name;
+				   $document = base_url()."documents/".$this-&#62;upload-&#62;file_name;		  
+				   $this-&#62;load-&#62;model('actualitat_model');
+				   $this-&#62;actualitat_model-&#62;crearDocument($nom, $document);
+				   redirect('admin/documents');
+	        		}
+	}
+
+
+    </PRE
+><P
+>AquÃ­ tenim la funciÃ³ que carrega a la base de dades els arxius al model_actualitat </P
+><PRE
+CLASS="programlisting"
+>&#60;?php
+ 
+		 public function crearDocument($nom, $document) {
+		    $data = array(
+		      'titul' =&#62; $nom,
+		      'document' =&#62; $document
+		    );
+		 
+		    $this-&#62;db-&#62;insert('DOCUMENTS', $data);
+		  }
+    </PRE
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c59.html"
+ACCESSKEY="P"
+>Anterior</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Inici</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c71.html"
+ACCESSKEY="N"
+>Següent</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Tauler Administratiu --&#62; CRUD Calendari (Update)</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Tauler Administratiu --&#62; CRUD Documents (Delete)</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

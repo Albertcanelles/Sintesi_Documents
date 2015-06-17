@@ -1,0 +1,210 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Tauler Administratiu --&#62; CRUD Actualitat (Read) </TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="Guia de Referencia: Administrador"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Tauler Administratiu --> CRUD Actualitat (Create) "
+HREF="c19.html"><LINK
+REL="NEXT"
+TITLE="Tauler Administratiu --> CRUD Actualitat (Update) "
+HREF="c33.html"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Guia de Referencia: Administrador</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c19.html"
+ACCESSKEY="P"
+>Anterior</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c33.html"
+ACCESSKEY="N"
+>Següent</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="AEN25"
+></A
+>Capítol 3. Tauler Administratiu --&#62; CRUD Actualitat (Read) </H1
+><P
+> Aquesta es la funciÃ³ actualitat del controlador Admin comprova si estas logeijat i reb dades del model i les pasa a la vista </P
+><PRE
+CLASS="programlisting"
+>&#60;?php
+
+ function actualitat(){ 
+    if($this-&#62;session-&#62;userdata('logueado') &#38;&#38; ($this-&#62;session-&#62;userdata('ROL')=='ENTRENADOR' || $this-&#62;session-&#62;userdata('ROL')=='ADMINISTRADOR')){      
+      $this-&#62;load-&#62;model('actualitat_model');   
+            $data = $this-&#62;actualitat_model-&#62;getActualitat();
+              $this-&#62;load-&#62;view('admin/gestioactualitat', $data);  
+    }else{
+        $this-&#62;load-&#62;view('client/login');
+    }             
+  }
+
+    </PRE
+><P
+> Aquest es el actualitat_model i la funcio segÃ¼ent fa una select a la BD per agafar les dades </P
+><PRE
+CLASS="programlisting"
+>&#60;?php
+
+  public function getActualitat() {
+    $this-&#62;db-&#62;select('id_blog, titol, foto');
+    $query = $this-&#62;db-&#62;get('ACTUALITAT');
+    return $query-&#62;result_array();
+  }
+    </PRE
+><P
+>Aquesta es la vista on rebem l'actualitat  </P
+><PRE
+CLASS="programlisting"
+>&#60;?php
+          $i=1;
+          foreach($this-&#62;_ci_cached_vars as $index =&#62; $llistaractualitat){ 
+        ?&#62;
+          &#60;?php
+              if($i==1 $i==3 || $i==6 || $i==9 ){?&#62;
+              &#60;div class="row"&#62;
+              &#60;?php               
+              };?&#62;                
+                &#60;div class="col-xs-12 col-sm-4 col-md-4"&#62;
+                    &#60;div class="thumbnail card"&#62;
+                        &#60;img  src="&#60;?php echo $llistaractualitat['foto'];?&#62;" class="img-responsive" /&#62;
+                        &#60;div class="caption"&#62;
+                        &#60;h4&#62;&#60;?php echo $llistaractualitat['titol']; ?&#62;&#60;/h4&#62;
+                            &#60;p&#62;
+                              &#60;?php echo substr($llistaractualitat['comentari'],0,300); ?&#62;
+                            &#60;/p&#62;
+                                &#60;div class="btn-read-more-container"&#62;
+                                &#60;form method="post" action="&#60;?php echo base_url() ?&#62;index.php/client/llegirmes"&#62;                                      
+                                      &#60;input type="hidden" class="form-control" name='id' value="&#60;?php echo $llistaractualitat['id_blog']; ?&#62;"&#62;
+                                      &#60;button type="submit" class="btn  btn-read-more" &#62;
+                                        Llegir mÃ©s &#60;i class="fa fa-angle-right"&#62;&#60;/i&#62;
+                                      &#60;/button&#62;
+                                                                        
+                                    &#60;/form&#62;
+                                &#60;/div&#62;
+                        &#60;/div&#62;
+                    &#60;/div&#62;
+                  &#60;/div&#62;
+                 &#60;?php if($i==1 $i==3 || $i==6 || $i==9 ){?&#62;
+                    &#60;/div&#62;
+                    &#60;?php         
+                };?&#62;
+            &#60;?php
+              if($i==9){
+                break;
+              };
+            $i++;
+            };
+          ?&#62;
+    </PRE
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c19.html"
+ACCESSKEY="P"
+>Anterior</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Inici</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c33.html"
+ACCESSKEY="N"
+>Següent</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Tauler Administratiu --&#62; CRUD Actualitat (Create)</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Tauler Administratiu --&#62; CRUD Actualitat (Update)</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

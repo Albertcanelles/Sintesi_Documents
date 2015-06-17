@@ -1,0 +1,262 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Scripts --&#62; Script Usuaris</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="Guia de Referencia: Administrador"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Tauler Administratiu --> CRUD Usuaris (Delete)"
+HREF="c105.html"><LINK
+REL="NEXT"
+TITLE="Scripts --> Script Calendari"
+HREF="c113.html"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Guia de Referencia: Administrador</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c105.html"
+ACCESSKEY="P"
+>Anterior</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c113.html"
+ACCESSKEY="N"
+>Següent</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="AEN109"
+></A
+>Capítol 17. Scripts --&#62; Script Usuaris</H1
+><P
+>AquÃ­ tenim l'script que ens calcula la nostra categoria partint dels criteris posats per la federaciÃ³ que serien el Sexe, el estat (Escolar,Federat,Master) i la edat per definir la categoria </P
+><PRE
+CLASS="programlisting"
+>&#60;?php
+
+   function calcular_edad($fecha){
+					    $dias = explode("-", $fecha, 3);
+					    $dias = mktime(0,0,0,$dias[1],$dias[0],$dias[2]);
+					    $edad = (int)((time()-$dias)/31556926 );
+					    return $edad;
+					}
+					// Funcio per calcular la categoria tenin en compte el sexe 
+					function calcular_categoria($sexe,$edad,$estat) {
+						switch($estat){
+							case 'Escolar':
+								switch ($edad) {
+									case 7:
+									case 8:
+										return 'PB';
+										break;
+									case 9:
+									case 10:
+										return 'B';
+										break;
+									case 11:
+									case 12:
+										return 'ALE';
+										break;
+									case 13:
+									case 14:
+										return 'INF';
+										break;
+									case 15:
+									case 16:
+										return 'JUV';
+										break;
+									default:
+									return 'CAD';
+									break;
+								}
+								break;
+						case 'Federat':
+						switch ($sexe) {
+							case 'MasculÃ­':
+								switch ($edad) {
+									case 8:
+										return 'PB';
+										break;
+									case 9:
+									case 10:
+									case 11:
+										return 'B';
+										break;
+									case 12:
+									case 13:
+										return 'ALE';
+										break;
+									case 14:
+									case 15:
+									case 16:
+										return 'INF';
+										break;
+									case 17:
+									case 18:
+										return 'JUV';
+										break;
+									case 19:
+									case 20:
+										return 'ABJ';
+										break;
+									default:
+									return 'ABS'; 
+									break;
+								}
+								break;
+							case 'FemenÃ­':
+								switch ($edad) {
+									case 8:
+										return 'PB';
+										break;
+									case 9:
+									case 10:
+										return 'B';
+										break;
+									case 11:
+									case 12:
+										return 'ALE';
+										break;
+									case 13:
+									case 14:
+										return 'INF';
+										break;
+									case 15:
+									case 16:
+										return 'JUV';
+										break;
+									case 17:
+									case 18:
+										return 'ABJ';
+										break;
+									default:
+										return 'ABS';
+								}
+						}
+						break;
+					}
+					}
+					function calcular_temporada($anys) {
+					            // Agafem el principi de cada temporada nova 
+					            $ninici = "1-09-".date("Y");
+					            $nfinal = "31-08-".date("Y", strtotime('+1 year'));
+					            // Convertixo les dates a format date           
+					            $minici =  strtotime($ninici);
+					            $mfinal = strtotime($nfinal);
+					            // Agafo la data pasada per parametre que es uns string i la paso a DATA
+					            $fechaNaixement = strtotime($anys);
+					            $dataarreglada= date('d-m-Y',$fechaNaixement);
+					            for($i=$minici; $i&#60;=$mfinal; $i+=86400) {
+					                if( date('d',$fechaNaixement)== date('d',$i) &#38;&#38; date('m',$fechaNaixement)== date('m',$i)) {
+					                   $edat = date("Y", strtotime('+1 year')) - date('Y',$fechaNaixement);
+					                    return $edat;
+					                }
+					            }
+						}
+    </PRE
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c105.html"
+ACCESSKEY="P"
+>Anterior</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Inici</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c113.html"
+ACCESSKEY="N"
+>Següent</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Tauler Administratiu --&#62; CRUD Usuaris (Delete)</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Scripts --&#62; Script Calendari</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

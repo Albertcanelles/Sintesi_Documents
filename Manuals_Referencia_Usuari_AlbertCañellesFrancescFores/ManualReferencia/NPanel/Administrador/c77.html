@@ -1,0 +1,215 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Tauler Administratiu --&#62; CRUD Usuaris (Insert)</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="Guia de Referencia: Administrador"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Tauler Administratiu --> CRUD Documents (Delete)"
+HREF="c71.html"><LINK
+REL="NEXT"
+TITLE="Tauler Administratiu --> CRUD Usuaris (Delete)"
+HREF="c83.html"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Guia de Referencia: Administrador</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c71.html"
+ACCESSKEY="P"
+>Anterior</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c83.html"
+ACCESSKEY="N"
+>Següent</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="AEN77"
+></A
+>Capítol 11. Tauler Administratiu --&#62; CRUD Usuaris (Insert)</H1
+><P
+>AquÃ­ tenim la funciÃ³ per insertar usuaris a la part administrador en aquesta part ja interve l'script per calcular la teva categoria directament apartÃ­ de la teva edat </P
+><PRE
+CLASS="programlisting"
+>&#60;?php
+ function insertar_usuari(){	
+		        $this-&#62;form_validation-&#62;set_rules('usuari','usuari','required');
+		        $this-&#62;form_validation-&#62;set_rules('contrasenya', 'contrasenya', 'required');
+		        if ($this-&#62;form_validation-&#62;run() == FALSE)
+		        {		        	
+		            $this-&#62;load-&#62;model('actualitat_model');		
+				    $data['usuaris'] = $this-&#62;actualitat_model-&#62;getUsuaris();
+				    $data['validar_usuari'] = $this-&#62;actualitat_model-&#62;getUsuaris_validar();
+				    $this-&#62;load-&#62;view('admin/gestiousuaris', $data);
+		        }
+		        else
+		        {
+		           
+				   $config_file = array (
+					'upload_path' =&#62; './actualitat/',
+					'allowed_types' =&#62; 'png|jpg|jpeg',
+					'overwrite' =&#62; false,
+					'max_size' =&#62; 0,
+					'max_width' =&#62; 0,
+					'max_height' =&#62; 0,
+					'encrypt_name' =&#62; false,
+					'remove_spaces' =&#62; true,
+					);
+				   $this-&#62;upload-&#62;initialize($config_file);
+				   if (!$this-&#62;upload-&#62;do_upload('foto')) {
+						redirect('admin/usuaris');
+						$error = $this-&#62;upload-&#62;display_errors();
+						echo $error;
+					}
+					else {
+				   $foto = base_url()."actualitat/".$this-&#62;upload-&#62;file_name;	
+				   $usuari = $this-&#62;input-&#62;post('usuari');
+				   $contrasenya = md5($this-&#62;input-&#62;post('contrasenya'));
+				   $email = $this-&#62;input-&#62;post('email');
+				   $nom = $this-&#62;input-&#62;post('nom'); 
+				   $cognoms = $this-&#62;input-&#62;post('cognoms');
+				   $data_naixement = $this-&#62;input-&#62;post('data_naixement');  
+				   $rol = $this-&#62;input-&#62;post('rol'); 
+				   $estat = $this-&#62;input-&#62;post('estat'); 
+				   $categoria = $this-&#62;input-&#62;post('categoria'); 
+				   $this-&#62;load-&#62;model('actualitat_model');
+				   if($estat=='Escolar' || $estat=='Master'){ 
+						$categoria=NULL;
+					}
+				   $this-&#62;actualitat_model-&#62;insertaUsuari($usuari, $contrasenya, $email, $nom, $cognoms, $foto, $data_naixement, $rol, $estat, $categoria);
+				   redirect('admin/usuaris');
+	        	   }		          
+	        	}
+	}
+    </PRE
+><P
+>AquÃ­ tenim la funciÃ³ que carrega a la base de dades que inserta els Usuaris al model_actualitat </P
+><PRE
+CLASS="programlisting"
+>&#60;?php
+
+	public function insertaUsuari($contrasenya, $nom, $cognoms, $foto, $data_naixement, $rol, $estat, $categoria, $sexe, $email) {
+    $data = array(
+      'contrasenya' =&#62; $contrasenya,
+      'nom' =&#62; $nom,
+      'cognoms' =&#62; $cognoms,
+      'foto' =&#62; $foto,
+      'data_naixement' =&#62; $data_naixement,
+      'rol' =&#62; $rol,
+      'estat' =&#62; $estat,
+      'categoria' =&#62; $categoria,
+      'sexe' =&#62; $sexe,
+      'email' =&#62; $email,
+    );
+    $this-&#62;db-&#62;insert('USUARIS_INTERNS', $data);
+  }
+
+
+    </PRE
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c71.html"
+ACCESSKEY="P"
+>Anterior</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Inici</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c83.html"
+ACCESSKEY="N"
+>Següent</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Tauler Administratiu --&#62; CRUD Documents (Delete)</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Tauler Administratiu --&#62; CRUD Usuaris (Delete)</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

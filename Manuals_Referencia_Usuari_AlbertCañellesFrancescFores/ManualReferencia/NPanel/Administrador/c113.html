@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Scripts --&#62; Script Calendari</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="Guia de Referencia: Administrador"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Scripts --> Script Usuaris"
+HREF="c109.html"><LINK
+REL="NEXT"
+TITLE="Login --> Login i Sortida"
+HREF="c117.html"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Guia de Referencia: Administrador</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c109.html"
+ACCESSKEY="P"
+>Anterior</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c117.html"
+ACCESSKEY="N"
+>Següent</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="AEN113"
+></A
+>Capítol 18. Scripts --&#62; Script Calendari</H1
+><P
+>AquÃ­ tenim la funciÃ³ per eliminar la galeria reben la ID de la vista i pasan-la al model </P
+><PRE
+CLASS="programlisting"
+>&#60;?php
+
+$mail = "Prueba de mensaje";
+//Titulo
+$titulo = "PRUEBA DE TITULO";
+//cabecera
+$headers = "MIME-Version: 1.0\r\n"; 
+$headers .= "Content-type: text/html; charset=iso-8859-1\r\n"; 
+//direcciÃ³n del remitente 
+$headers .= "From: Geeky Theory &#60;ffores4@gmail.com&#62;\r\n";
+//Enviamos el mensaje a info@geekytheory.com 
+$bool = mail("ffores93@gmail.com",$titulo,$mail,$headers);
+if($bool){
+    echo "Mensaje enviado";
+}else{
+    echo "Mensaje no enviado";
+}*/
+?&#62;&#60;!DOCTYPE html&#62;
+&#60;html&#62;
+&#60;head&#62;
+	&#60;title&#62;&#60;/title&#62;
+&#60;/head&#62;
+&#60;body&#62;
+&#60;?php
+	include '';
+ ?&#62;
+&#60;/body&#62;
+&#60;/html&#62;
+    </PRE
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c109.html"
+ACCESSKEY="P"
+>Anterior</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Inici</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c117.html"
+ACCESSKEY="N"
+>Següent</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Scripts --&#62; Script Usuaris</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Login --&#62; Login i Sortida</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

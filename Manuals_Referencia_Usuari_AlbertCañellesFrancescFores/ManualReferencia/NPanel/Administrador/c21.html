@@ -1,0 +1,202 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<HTML
+><HEAD
+><TITLE
+>Tauler Administratiu --&#62; CRUD Actualitat (Create) </TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
+REL="HOME"
+TITLE="Guia de Referencia: Administrador"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Tauler Administratiu --> Inici"
+HREF="c15.html"><LINK
+REL="NEXT"
+TITLE="Tauler Administratiu --> CRUD Actualitat (Read) "
+HREF="c27.html"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Guia de Referencia: Administrador</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c15.html"
+ACCESSKEY="P"
+>Anterior</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c27.html"
+ACCESSKEY="N"
+>Següent</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="AEN21"
+></A
+>Capítol 2. Tauler Administratiu --&#62; CRUD Actualitat (Create) </H1
+><P
+> Aquesta es la funciÃ³ que comprova que els camps estiguen correctes hi tambe comprovar si la foto es un format compatible si no mostra errors </P
+><PRE
+CLASS="programlisting"
+>&#60;?php
+
+ function insertar_actualitat(){
+    $this-&#62;form_validation-&#62;set_rules('titol','Titul','required');
+    $this-&#62;form_validation-&#62;set_rules('comentari', 'Comentari', 'required');
+    $this-&#62;form_validation-&#62;set_message('required', '&#60;div class="alert alert-danger alert-dismissable"&#62;
+                                            &#60;button type="button" data-dismiss="alert" aria-hidden="true" class="close"&#62;&#38;times;&#60;/button&#62;
+                                            &#60;strong&#62;Error!&#60;/strong&#62; El camp %s es obligat&#60;/div&#62;');
+
+    if ($this-&#62;form_validation-&#62;run() == FALSE)
+        {
+        $this-&#62;load-&#62;model('actualitat_model');   
+          $data = $this-&#62;actualitat_model-&#62;getActualitat();
+          $this-&#62;load-&#62;view('admin/gestioactualitat', $data);
+        }
+        else
+        {
+            $titol = $this-&#62;input-&#62;post('titol');
+        $comentari = $this-&#62;input-&#62;post('comentari');
+        $config_file = array (
+        'upload_path' =&#62; './actualitat/',
+        'allowed_types' =&#62; 'png|jpg|jpeg',
+        'overwrite' =&#62; false,
+        'max_size' =&#62; 0,
+        'max_width' =&#62; 0,
+        'max_height' =&#62; 0,
+        'encrypt_name' =&#62; false,
+        'remove_spaces' =&#62; true,
+        );
+        $this-&#62;upload-&#62;initialize($config_file);
+        if (!$this-&#62;upload-&#62;do_upload('foto')) {
+          redirect('admin/actualitat');
+          $error = $this-&#62;upload-&#62;display_errors();
+          echo $error;
+        }
+        else {
+          $foto = base_url()."actualitat/".$this-&#62;upload-&#62;file_name;      
+          $this-&#62;load-&#62;model('actualitat_model');
+          $this-&#62;actualitat_model-&#62;crearActualitat($titol, $comentari, $foto);
+          redirect('admin/actualitat');
+            }
+      }
+  }
+
+    </PRE
+><P
+> Aquest es el actualitat_model i la funcio segÃ¼ent fa una select a la BD per insertar les dades </P
+><PRE
+CLASS="programlisting"
+>&#60;?php
+
+  public function crearActualitat($titol, $comentari, $foto) {
+    $data = array(
+      'titol' =&#62; $titol,
+      'comentari' =&#62; $comentari,
+      'foto' =&#62; $foto
+    );
+ 
+    $this-&#62;db-&#62;insert('ACTUALITAT', $data);
+  }
+
+    </PRE
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c15.html"
+ACCESSKEY="P"
+>Anterior</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Inici</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c27.html"
+ACCESSKEY="N"
+>Següent</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Tauler Administratiu --&#62; Inici</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Tauler Administratiu --&#62; CRUD Actualitat (Read)</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>
